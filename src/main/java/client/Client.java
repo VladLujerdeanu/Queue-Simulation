@@ -2,7 +2,7 @@ package client;
 
 import java.util.Random;
 
-public class Client {
+public class Client implements Comparable<Client> {
     private static int CLIENT = 0; // global client id
     private int id;
     private int arrivalTime;
@@ -20,21 +20,23 @@ public class Client {
                 rand.nextInt(maxServiceTime - minServiceTime + 1) + minServiceTime);
     }
 
-    /// Getters and Setters
-    public int getId() {
-        return id;
+    public void print() {
+        System.out.print("(" + id + ", " + arrivalTime + ", " + serviceTime + ")");
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "(" + id + ", " + arrivalTime + ", " + serviceTime + ")";
     }
+
+    public int compareTo(Client c) {
+        return this.arrivalTime - c.arrivalTime;
+    }
+
+    /// Getters and Setters
 
     public int getArrivalTime() {
         return arrivalTime;
-    }
-
-    public void setArrivalTime(int arrivalTime) {
-        this.arrivalTime = arrivalTime;
     }
 
     public int getServiceTime() {

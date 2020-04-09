@@ -1,11 +1,13 @@
 package main;
 
-import client.Client;
+import simulator.Scheduler;
+import simulator.SimulationManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainClass {
@@ -16,26 +18,32 @@ public class MainClass {
     private static int maxArrivalTime = 0;
     private static int minServiceTime = 0;
     private static int maxServiceTime = 0;
+    private static String writePath = "";
 
     public static void main(String[] args) {
         readFile(args[0]);
-        Client[] clients = new Client[clientsNumber];
-        for(Client c: clients){
-            c = Client.RandGenerator(minArrivalTime, maxArrivalTime, minServiceTime, maxServiceTime);
-            System.out.println(c.getId() + " " + c.getArrivalTime() + " " + c.getServiceTime() + "\n");
+        writePath = args[1];
+        Scheduler.StrategyType strategyType = Scheduler.StrategyType.SHORTEST_TIME;
+        if(args.length > 2){
+            if(args[2].equals("Queue")){
+                strategyType = Scheduler.StrategyType.SHORTEST_QUEUE;
+            }
         }
+        SimulationManager sm = new SimulationManager(clientsNumber, queuesNumber, simInterval, minArrivalTime, maxArrivalTime, minServiceTime, maxServiceTime, strategyType);
+        Thread start = new Thread(sm);
+        start.start();
     }
 
-    public static void readFile(String path){
+    public static void readFile(String path) {
         Scanner read = null;
         try {
-            File input = new File("in-test-1.txt");
+            File input = new File(path);
             read = new Scanner(input);
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
             e.printStackTrace();
         }
-        if(read != null) {
+        if (read != null) {
             try {
                 clientsNumber = read.nextInt();
                 read.nextLine();
@@ -55,6 +63,27 @@ public class MainClass {
                 System.out.println("Something went wrong while reading the file.");
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void writeFile(ArrayList<String> args) {
+        try {
+            File outFile = new File(writePath);
+            if (outFile.createNewFile()) {
+                System.out.println("File successfully created.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter output = new FileWriter(writePath);
+            for (String s : args) {
+                output.write(s);
+            }
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

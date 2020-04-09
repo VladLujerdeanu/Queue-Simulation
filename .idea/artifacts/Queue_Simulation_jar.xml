@@ -3,6 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Queue_Simulation_jar</output-path>
     <root id="archive" name="Queue_Simulation.jar">
       <element id="module-output" name="Queue_Simulation" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
     </root>
   </artifact>
 </component>
